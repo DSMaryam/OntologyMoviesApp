@@ -62,16 +62,20 @@ def write_request(request_dict):
       request+=selected_genre[g-1]+"', 'i'))."
     request+=    """
     FILTER LANGMATCHES( LANG(?genre), 'en').
-    FILTER (YEAR(?publicationdate) = """+date+""").
+    """
+    
+    if date!="0":
+      request+="""FILTER (YEAR(?publicationdate) = """+date+""")."""
+    else:
+      request+="""FILTER (YEAR(?publicationdate) > 2009)."""
 
         
-    
+    request+="""
     }
     LIMIT 30"""
 
 
     return request 
-
 
 def parse_request(request_dict):
     parsed_request = {}

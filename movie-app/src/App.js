@@ -283,18 +283,24 @@ class MovieCard extends React.Component {
   }
 
   render() {
-      const {
+      console.log(this.state.movieData)
+      var {
           Title,
           Released,
           Genre,
           Plot,
           Poster,
-          imdbRating
+          imdbRating,
+          Country,
+          Actors,
+          Director
       } = this.state.movieData;
 
       if (!Poster || Poster === 'N/A') {
           return null;
       }
+      Genre = Genre.split(', ').slice(0,6);
+      Actors = Actors.split(', ').slice(0,4);
 
       return (
           <div className="movie-card-container">
@@ -309,12 +315,25 @@ class MovieCard extends React.Component {
                   <div>
                       <h1>{Title}</h1>
                       <small>Released Date: {Released}</small>
+                      
+                  </div>
+                  <div>
+                  <small>Director: {Director}</small>
+                  </div>
+                  <div>
+                  <small>Country: {Country}</small> 
                   </div>
                   <h4>Rating: {imdbRating} / 10</h4>
                   <p>{Plot && Plot.substr(0, 350)}</p>
                   <div className="tags-container">
-                      {Genre && Genre.split(', ').map(g => <span>{g}</span>)}
+                      Actors :
+                      {Actors && Actors.map(a => <span>{a}</span>)}
                   </div>
+                  <div className="tags-container">
+                  Genres :
+                      {Genre && Genre.map(g => <span>{g}</span>)}
+                  </div>
+                  
               </div>
           </div>
       );

@@ -81,12 +81,15 @@ def parse_request(request_dict):
         parsed_request["selected_genre"] = DEFAULT_GENRES
 
     parsed_request["star"] = request_dict["Actor"]
-    if type(request_dict["Year"]) != int:
+    if request_dict["Year"] != '':
         parsed_request["date"] = int(request_dict["Year"])
     else:
         parsed_request["date"] = 0
-        
-    parsed_request["country"] = int(request_dict["Country"])
+
+    if request_dict['Country'] == '' :
+        parsed_request["country"] = 0
+    else :
+        parsed_request["country"] = int(request_dict["Country"])
     parsed_request["director"] = request_dict["Director"]
     return parsed_request
 
@@ -94,7 +97,6 @@ def parse_request(request_dict):
 
 def get_imdb_ids(request_dict):
     query_string=write_request(request_dict)
-    print(query_string)
     results = return_sparql_query_results(query_string)
     imdb_ids=[]
     for binding in results['results']['bindings']:

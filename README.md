@@ -20,8 +20,9 @@ cd movie-search-app-v2
 ```
 ### Installation des modules :
 #### Front End :
+(installez yarn pour gerer les package du front end)
 ```
-npm install --global yarn (installez yarn pour gerer les package du front end)
+npm install --global yarn 
 cd movie-app 
 yarn
 ```

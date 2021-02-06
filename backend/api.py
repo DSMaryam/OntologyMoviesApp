@@ -1,3 +1,5 @@
+from qwikidata.sparql import return_sparql_query_results
+
 DEFAULT_GENRES = [
     "drama",
     "action",
@@ -12,6 +14,63 @@ DEFAULT_GENRES = [
     "romance",
     "horror",
 ]
+
+def write_request(request_dict):
+    selected_genre=request_dict["selected_genre"]
+    date=str(request_dict["date"])
+    req_country=request_dict["country"]
+    star=request_dict["star"]
+    director=request_dict["director"]
+
+    #possible_countries=["United States", "Italy", "France", "India", "Germany", "United Kingdom", "Canada", "Japan", "Spain"]
+    countries=['Q30','Q38','Q142','Q668','Q183','Q145','Q16','Q17','Q29']
+
+    country=countries[req_country]
+
+    g=len(selected_genre)
+
+
+    request="""PREFIX q: <http://www.wikidata.org/prop/qualifier/>
+    PREFIX s: <http://www.wikidata.org/prop/statement/>
+
+    SELECT DISTINCT ?imdb 
+    WHERE {
+      ?movie wdt:P345 ?imdb  .
+      FILTER (SUBSTR(?imdb,1,2)='tt') .
+      ?movie wdt:P31 wd:Q11424;
+            wdt:P495 wd:"""+country + """;
+
+            p:P577 ?placeofpublication.
+
+      ?placeofpublication q:P291 wd:"""+country+""". 
+      ?placeofpublication s:P577 ?publicationdate.
+      ?movie wdt:P161 [rdfs:label ?star].
+    FILTER REGEX( ?star, '""" + star+"""', 'i').  
+      FILTER LANGMATCHES( LANG(?star), 'en').
+      
+      ?movie wdt:P57 [rdfs:label ?director].
+      FILTER REGEX( ?director, '"""+ director+ """', 'i'). 
+    FILTER LANGMATCHES( LANG(?director), 'en').
+      
+        ?movie wdt:P136 [rdfs:label ?genre].
+        """  
+    if g>0:
+      request+="FILTER (REGEX( ?genre,'"
+      for i in range(g-1):
+        request+=selected_genre[i]+"', 'i')||REGEX( ?genre,'"
+        request
+      request+=selected_genre[g-1]+"', 'i'))."
+    request+=    """
+    FILTER LANGMATCHES( LANG(?genre), 'en').
+    FILTER (YEAR(?publicationdate) = """+date+""").
+
+        
+    
+    }
+    LIMIT 30"""
+
+
+    return request 
 
 
 def parse_request(request_dict):
@@ -31,6 +90,11 @@ def parse_request(request_dict):
     return parsed_request
 
 
+
 def get_imdb_ids(request_dict):
-    # TODO : use the request_dict to get the movie ids list
-    return ["tt0120737", "tt0167261", "tt0167260"]  # Mock list for now
+    query_string=write_request(request_dict)
+    results = return_sparql_query_results(query_string)
+    imdb_ids=[]
+    for binding in results['results']['bindings']:
+        imdb_ids.append(binding['imdb']['value'])
+    return imdb_ids

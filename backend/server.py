@@ -16,6 +16,7 @@ def get_response():
         # TODO :
         # get the list of movie imdb ids from the request
         imdb_ids = get_imdb_ids(parsed_request)
+        print(imdb_ids)
         return jsonify(imdb_ids)
     else:
         error_message = """<html><body><center>"""

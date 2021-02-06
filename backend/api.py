@@ -85,7 +85,10 @@ def parse_request(request_dict):
         parsed_request["date"] = int(request_dict["Year"])
     else:
         parsed_request["date"] = 0
-    parsed_request["country"] = request_dict["Country"]
+    if len(request_dict["Country"]) > 0:
+        parsed_request["country"] = int(request_dict["Country"])
+    else:
+        parsed_request["country"] = 0
     parsed_request["director"] = request_dict["Director"]
     return parsed_request
 

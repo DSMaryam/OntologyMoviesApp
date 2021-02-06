@@ -14,28 +14,38 @@ Travail fait par :
 - Python 3
 - Nodejs (https://nodejs.org/en/download/)
 ### 1 - Clone le repo :
+```
 git clone git@gitlab-student.centralesupelec.fr:firas.dhaha/movie-search-app-v2.git
 cd movie-search-app-v2
+```
 ### Installation des modules :
 #### Front End :
+```
 npm install --global yarn (installez yarn pour gerer les package du front end)
 cd movie-app 
-yarn 
+yarn
+```
 #### Back End : 
+```
 cd ../backend 
 pip3 install -r requirements.txt
+```
 
 **NOW YOU'RE GOOD TO GO**
 
 ## Lancement de l'application :
 ### lancer le front :
+```
 cd movie-app 
 yarn start 
+```
 ### lancer le server :
+```
 cd backend 
 export FLASK_ENV = development 
 export FLASK_APP = server.py
 flask run -h localhost -p 3000 
+```
 
 ## Utilisation de l'application :
 

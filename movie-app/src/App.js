@@ -16,7 +16,7 @@ class MoviesList extends React.Component {
       selectedActor : '',
       selectedAwards : [],
       selectedDirector : '',
-      selectedCountry : '',
+      selectedCountry : 0,
       selectedYear : 0,
       submit : false,
   };

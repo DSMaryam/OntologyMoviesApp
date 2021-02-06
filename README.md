@@ -1,14 +1,14 @@
-#Movie Search APP :
+# Movie Search APP :
 Travail fait par : 
-* Maryam Cherradi
-* Firas Dhaha
+* **Maryam Cherradi**
+* **Firas Dhaha**
 
 
-#Description de l'application :
+# Description de l'application :
 
 
 
-#Comment utiliser l'application :
+# Comment utiliser l'application :
 ## Installation : 
 ### Requirements : 
 - Python 3

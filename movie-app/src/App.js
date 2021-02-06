@@ -13,10 +13,12 @@ class MoviesList extends React.Component {
       moviesList: ['tt2294629'],
       searchTerm: '',
       selectedGenres: [],
-      selectedActors : [],
+      selectedActor : '',
       selectedAwards : [],
       selectedDirector : '',
       selectedCountry : '',
+      selectedYear : 0,
+      submit : false,
   };
 
   handleChangeGenres = (selectedOption) => {
@@ -29,12 +31,15 @@ class MoviesList extends React.Component {
   }
 
   handleChangeActors = (selectedOption) => {
-    const selectedActors = [];
-    for (const actor of selectedOption) {
-        selectedActors.push(actor.value)
+    if (selectedOption == null){
+        this.setState({selectedActor : ""});
+    }else {
+        this.setState({selectedActor : selectedOption.value});
+        console.log(`Actors selected:`, selectedOption.value);
     }
-    this.setState({selectedActors : selectedActors});
-    console.log(`Actors selected:`, selectedActors);
+    
+    
+    
   }
 
   handleChangeDirector = (selectedOption) => {
@@ -60,57 +65,38 @@ class MoviesList extends React.Component {
     if (selectedOption == null){
         this.setState({selectedCountry : ""});
     }else {
-        this.setState({selectedCountry : selectedOption.label});
+        this.setState({selectedCountry : selectedOption.value});
     }
     
     console.log(`Country selected:`, selectedOption);
   }
 
+
   search = event => {
       event.preventDefault();
-      axios
-          .get(
-              `https://www.omdbapi.com/?apikey=756abb2f&s=${
-                  this.state.searchTerm
-              }&plot=full`
-          )
-          .then(res => res.data)
-          .then(res => {
-              if (!res.Search) {
-                  this.setState({ moviesList: [] });
-                  return;
-              }
-
-              const moviesList = res.Search.map(movie => movie.imdbID);
-              this.setState({
-                  moviesList
-              });
-          });
-      axios
-         .post('http://localhost:3000/',
-                this.getParams(), {headers: {"Access-Control-Allow-Origin": "*"}}
-          )
-          .then(function (response) {
-            console.log("hello",response);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+      this.setState({submit : true})    
   };
 
-  handleChange = event => {
-      this.setState({
-          searchTerm: event.target.value
-      });
-  };
+//   handleChange = event => {
+//       this.setState({
+//           searchTerm: event.target.value
+//       });
+//   };
+
+  handleChangeYear = event => {
+    this.setState({
+        selectedYear: event.target.value
+    });
+};
 
   getParams = () => {
       var params = {};
       params['Genres'] = this.state.selectedGenres
-      params['Actors'] = this.state.selectedActors
+      params['Actor'] = this.state.selectedActor
       params['Director'] = this.state.selectedDirector
       params['Country'] = this.state.selectedCountry
-      params['Awards'] = this.state.selectedAwards
+      //params['Awards'] = this.state.selectedAwards
+      params['Year'] = this.state.selectedYear
       return(JSON.stringify(params));
   }
 
@@ -118,15 +104,31 @@ class MoviesList extends React.Component {
     const countries = countryList().getData();
     this.setState({countries : countries});
   }
-  //componentDidUpdate(){
-    //const axios = require('axios').default;
-    //console.log('params',this.getParams())
+
+
+  componentDidUpdate(){
+    if (this.state.submit){
+        const axios = require('axios').default;
+
+        var vm = this;
+        axios
+            .post('http://localhost:3000/',
+                    this.getParams(), {headers: {"Access-Control-Allow-Origin": "*"}}
+            )
+            .then(function (response) {
+                console.log("hello",response.data);
+                console.log("state", vm.state)
+                vm.setState({moviesList : response.data})
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        this.setState({submit : false})
+    }
     
-    //const searchTerm = "hello"
     
     
-    
-  //}
+  }
 
   
 
@@ -136,28 +138,27 @@ class MoviesList extends React.Component {
       const GenreOptions = [
         { value: 'action', label: 'Action' },
         { value: 'adventure', label: 'Adventure' },
-        { value: 'animation', label: 'Animation' },
-        { value: 'biography', label: 'Biography' },
+        { value: 'biographical', label: 'Biography' },
         { value: 'comedy', label: 'Comedy' },
-        { value: 'crime', label: 'Crime' },
-        { value: 'documentary', label: 'Documentary' },
         { value: 'drama', label: 'Drama' },
-        { value: 'family', label: 'Family' },
-        { value: 'fantasy', label: 'Fantasy' },
-        { value: 'film noir', label: 'Film Noir' },
-        { value: 'history', label: 'History' },
+        { value: 'historical', label: 'History' },
         { value: 'horror', label: 'Horror' },
-        { value: 'musical', label: 'Musical' },
-        { value: 'mystery', label: 'Mystery' },
         { value: 'romance', label: 'Romance' },
-        { value: 'Mystery', label: 'Mystery' },
-        { value: 'sci-fi', label: 'Sci-Fi' },
-        { value: 'short film', label: 'Short Film' },
-        { value: 'sport', label: 'Sport' },
-        { value: 'superhero', label: 'Superhero' },
-        { value: 'thriller', label: 'Thriller' },
+        { value: 'gangster', label: 'Gangster' },
         { value: 'war', label: 'War' },
-        { value: 'western', label: 'Western' },
+        { value: 'fantasy', label: 'Fantasy' },
+        { value: 'buddy', label: 'Buddy' },
+      ]
+      const CountriesOptions = [
+          {value: 0, label: 'United States'},
+          {value: 1, label: 'Italy'},
+          {value: 2, label: 'France'},
+          {value: 3, label: 'India'},
+          {value: 4, label: 'Germany'},
+          {value: 5, label: 'England'},
+          {value: 6, label: 'Canada'},
+          {value: 7, label: 'Japan'},
+          {value: 8, label: 'Spain'},
       ]
       
       const ActorsOptions = [
@@ -175,13 +176,7 @@ class MoviesList extends React.Component {
 
       return (
           <div>
-              <form onSubmit={this.search}>
-                  <input
-                      placeholder="Search for a movie"
-                      onChange={this.handleChange}
-                  />
-                  <Button as="input" type="submit" value="Submit" />
-              </form>
+              
               <form>
               <Select
                   className="basic-single"
@@ -202,7 +197,7 @@ class MoviesList extends React.Component {
               </form>
               <form>
               <CreatableSelect
-                    isMulti
+                    isClearable
                     onChange={this.handleChangeActors}
                     options={ActorsOptions}
                     placeholder="Acteurs"
@@ -218,8 +213,8 @@ class MoviesList extends React.Component {
                     closeMenuOnSelect = {true}
                 />
               </form>
-
-              <form>
+                
+              {/* <form>
               <CreatableSelect
                     isMulti
                     onChange={this.handleChangeAward}
@@ -227,10 +222,10 @@ class MoviesList extends React.Component {
                     placeholder="Récompense"
                     closeMenuOnSelect = {true}
                 />
-              </form>
+              </form> */}
               <form>
               <Select 
-                    options={this.state.countries} 
+                    options={CountriesOptions} 
                     onChange={this.handleChangeCountry} 
                     placeholder="Nationalité"
                     closeMenuOnSelect = {true}
@@ -240,6 +235,18 @@ class MoviesList extends React.Component {
                     isRtl={false}
                     isSearchable={true}
               />
+              </form>
+              <form>
+              <input 
+                    placeholder='Année de sortie'
+                    type='number'
+                    min={1950}
+                    max={2050}
+                    onChange={this.handleChangeYear}
+                    />
+              </form>
+              <form onSubmit={this.search}>
+                  <Button as="input" type="submit" value="Submit" />
               </form>
               
               {moviesList.length > 0 ? (

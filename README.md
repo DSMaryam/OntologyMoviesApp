@@ -24,7 +24,7 @@ La partie back end est codée en python. La partie api.py permet d'écrire et d'
 - Nodejs (https://nodejs.org/en/download/)
 ### 1 - Clone le repo :
 ```
-git clone git@gitlab-student.centralesupelec.fr:firas.dhaha/movie-search-app-v2.git
+git clone https://github.com/fdhaha-hub/movie-app.git
 cd movie-search-app-v2
 ```
 ### Installation des modules :

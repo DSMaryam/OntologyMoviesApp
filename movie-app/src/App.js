@@ -2,6 +2,7 @@ import React from 'react';
 //import ReactDOM from 'react-dom';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button'
+import Spinner from 'react-bootstrap/Spinner'
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import countryList from 'react-select-country-list'
@@ -118,12 +119,11 @@ class MoviesList extends React.Component {
             .then(function (response) {
                 console.log("hello",response.data);
                 console.log("state", vm.state)
-                vm.setState({moviesList : response.data})
+                vm.setState({moviesList : response.data, submit : false})
             })
             .catch(function (error) {
                 console.log(error);
             });
-        this.setState({submit : false})
     }
     
     
@@ -134,7 +134,8 @@ class MoviesList extends React.Component {
 
   render() {
       
-      const { moviesList } = this.state;
+      const { moviesList, submit } = this.state;
+      console.log('submit :', submit)
       const GenreOptions = [
         { value: 'action', label: 'Action' },
         { value: 'adventure', label: 'Adventure' },
@@ -245,9 +246,18 @@ class MoviesList extends React.Component {
                     onChange={this.handleChangeYear}
                     />
               </form>
-              <form onSubmit={this.search}>
+              {submit ? <form><Button variant="primary" disabled>
+                            <Spinner
+                            as="span"
+                            animation="grow"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                            />
+                            Loading...
+                        </Button></form> : <form onSubmit={this.search}>
                   <Button as="input" type="submit" value="Submit" />
-              </form>
+              </form>}
               
               {moviesList.length > 0 ? (
                   moviesList.map(movie => (

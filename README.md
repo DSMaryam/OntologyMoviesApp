@@ -5,8 +5,16 @@ Travail fait par :
 
 
 # Description de l'application :
+Cette application est concue pour faire des recherches sur des films en se basant sur un nombre de critère :
+* **Genre** : il faut choisir un nombre de genres parmis ceux proposés.
+* **Acteur** : il faut choisir un acteur ou écrire le nom d'un acteur.
+* **Réalisateur** : il faut écrire le nom du réalisateur souhaité. 
+* **Nationalité** : il faut choisir la nationalité du film parmis ceux proposées.
+* **Année de sortie** : il faut choisir l'année de sortie du film (par défaut, ça affiche les films sortis à partir de 2010) 
 
-
+## Le front end : 
+La partie front end est codé en ReactJs, elle assure l'affichage des résultats reçus du backend. En particulier, le front end reçoit du server une liste contenant les IMDB id des films résultants de la recherche. En utilisant les IMDB id et l'api OMDBAPI, on récupère les informations sur chaque film (Synopsis, poster, ...) qu'on va afficher. 
+## Le Back end (server) :
 
 # Comment utiliser l'application :
 ## Installation : 
@@ -41,13 +49,14 @@ cd movie-app
 yarn start 
 ```
 ### lancer le server :
+"export" sous mac/linux et "set" sous windows.
 ```
 cd backend 
 export FLASK_ENV = development 
 export FLASK_APP = server.py
 flask run -h localhost -p 3000 
 ```
-
+Pour relancer le server, il faut seulement faire la commande ``` flask run -h localhost -p 3000 ```
 ## Utilisation de l'application :
 
 * choisissez ou saisissez les critères que vous voulez 
